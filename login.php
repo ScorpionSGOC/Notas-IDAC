@@ -9,7 +9,7 @@ if(status()) header('Location: index.php');
 
 <!DOCTYPE html>
 <html lang="en">
-
+       
 <head>
        <meta charset="UTF-8">
        <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -54,3 +54,4 @@ function Logear($con){
               echo "<script>alert('ID o clave de acceso incorrectas');</script>";
        }
 }
+/*Esto es solo una prueba*/
