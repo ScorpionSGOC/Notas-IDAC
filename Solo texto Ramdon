@@ -1,16 +1,37 @@
-<?php
-$nombre = $_POST['nombre'];
-$email = $_POST['email'];
-?>
-
 <!DOCTYPE html>
 <html>
-	<head>
-		<title>Datos del formulario</title>
-	</head>
-	<body>
-		<h1>Datos del formulario</h1>
-		<p>Nombre: <?php echo $nombre; ?></p>
-		<p>Email: <?php echo $email; ?></p>
-	</body>
+<head>
+	<title>Formulario con botón</title>
+</head>
+<body>
+	<form method="post" action="otra_interfaz.php">
+		<label for="dato">Dato:</label>
+		<input type="text" id="dato" name="dato"><br>
+
+		<button type="submit" name="enviar">Enviar</button>
+		<button onclick="window.location.href='otra_interfaz.php?dato='+encodeURIComponent(document.getElementById('dato').value)">Ir a otra interfaz con dato</button>
+	</form>
+</body>
+</html>
+
+///
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Otra interfaz</title>
+</head>
+<body>
+	<h1>Datos recibidos</h1>
+	<?php
+	if(isset($_POST['enviar'])){
+		$dato = $_POST['dato'];
+		echo "<p>El dato enviado por post es: " . $dato . "</p>";
+	}
+
+	if(isset($_GET['dato'])){
+		$dato = $_GET['dato'];
+		echo "<p>El dato enviado por get es: " . $dato . "</p>";
+	}
+	?>
+</body>
 </html>
