@@ -1,45 +1,37 @@
-<form id="miFormulario">
-  <label for="nombre">Nombre:</label>
-  <input type="text" id="nombre" name="nombre"><br><br>
+<form method="post" action="guardar.php">
+  <label>Nombre:</label>
+  <input type="text" name="nombre">
 
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email"><br><br>
+  <label>Email:</label>
+  <input type="email" name="email">
 
-  <button type="submit" id="guardarBtn">Guardar</button>
+  <button type="submit">Guardar</button>
 </form>
+//
 
-/////
-const miFormulario = document.getElementById("miFormulario");
-const guardarBtn = document.getElementById("guardarBtn");
-
-guardarBtn.addEventListener("click", function(event) {
-  event.preventDefault();
-
-  const nombre = document.getElementById("nombre").value;
-  const email = document.getElementById("email").value;
-
-  const data = { nombre: nombre, email: email };
-
-  const xhr = new XMLHttpRequest();
-  xhr.open("POST", "guardar.php");
-  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
-      console.log(xhr.responseText);
-    }
-  };
-  xhr.send(JSON.stringify(data));
-});
-
-/////////////
 <?php
-$data = json_decode(file_get_contents("php://input"), true);
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $nombre = $_POST['nombre'];
+  $email = $_POST['email'];
 
-$nombre = $data['nombre'];
-$email = $data['email'];
+  // Guardar los datos en una variable o en una base de datos
 
-// Código para guardar la información en una base de datos o archivo
+  // Redirigir a otra página para mostrar la información guardada
+  header('Location: mostrar.php');
+}
 ?>
+PHP:
 
 
 
+<?php
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+  $nombre = $_POST['nombre'];
+  $email = $_POST['email'];
+
+  // Guardar los datos en una variable o en una base de datos
+
+  // Redirigir a otra página para mostrar la información guardada
+  header('Location: mostrar.php');
+}
+?>
