@@ -1,36 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Formulario con botón</title>
+	<title>Formulario de registro</title>
 </head>
 <body>
-	<form method="post" action="otra_interfaz.php">
-		<label for="dato">Dato:</label>
-		<input type="text" id="dato" name="dato"><br>
+	<h1>Registro de usuario</h1>
+	<form method="post" action="recibir_datos.php">
+		<label for="nombre">Nombre:</label>
+		<input type="text" id="nombre" name="nombre"><br>
+
+		<label for="apellido">Apellido:</label>
+		<input type="text" id="apellido" name="apellido"><br>
 
 		<button type="submit" name="enviar">Enviar</button>
-		<button onclick="window.location.href='otra_interfaz.php?dato='+encodeURIComponent(document.getElementById('dato').value)">Ir a otra interfaz con dato</button>
 	</form>
 </body>
 </html>
 
-///
+//////
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Otra interfaz</title>
+	<title>Datos recibidos</title>
 </head>
 <body>
 	<h1>Datos recibidos</h1>
 	<?php
 	if(isset($_POST['enviar'])){
-		$dato = $_POST['dato'];
-		echo "<p>El dato enviado por post es: " . $dato . "</p>";
-	}
-
-	if(isset($_GET['dato'])){
-		$dato = $_GET['dato'];
-		echo "<p>El dato enviado por get es: " . $dato . "</p>";
+		$nombre = $_POST['nombre'];
+		$apellido = $_POST['apellido'];
+		echo "<p>El nombre ingresado es: " . $nombre . "</p>";
+		echo "<p>El apellido ingresado es: " . $apellido . "</p>";
 	}
 	?>
 </body>
