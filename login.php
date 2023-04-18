@@ -35,3 +35,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   header('Location: mostrar.php');
 }
 ?>
+
+/////
+<?php
+// Recuperar los datos guardados
+$nombre = 'Nombre guardado';
+$email = 'Email guardado';
+
+// Mostrar los datos en la página
+echo "<h2>Información guardada:</h2>";
+echo "<p>Nombre: $nombre</p>";
+echo "<p>Email: $email</p>";
+?>
