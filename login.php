@@ -1,57 +1,45 @@
+<form id="miFormulario">
+  <label for="nombre">Nombre:</label>
+  <input type="text" id="nombre" name="nombre"><br><br>
+
+  <label for="email">Email:</label>
+  <input type="email" id="email" name="email"><br><br>
+
+  <button type="submit" id="guardarBtn">Guardar</button>
+</form>
+
+/////
+const miFormulario = document.getElementById("miFormulario");
+const guardarBtn = document.getElementById("guardarBtn");
+
+guardarBtn.addEventListener("click", function(event) {
+  event.preventDefault();
+
+  const nombre = document.getElementById("nombre").value;
+  const email = document.getElementById("email").value;
+
+  const data = { nombre: nombre, email: email };
+
+  const xhr = new XMLHttpRequest();
+  xhr.open("POST", "guardar.php");
+  xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+      console.log(xhr.responseText);
+    }
+  };
+  xhr.send(JSON.stringify(data));
+});
+
+/////////////
 <?php
-include_once('./config/conexion.php');
-include_once('./config/sesion.php');
+$data = json_decode(file_get_contents("php://input"), true);
 
-if(isset($_GET['logout'])) destroy();
+$nombre = $data['nombre'];
+$email = $data['email'];
 
-if(status()) header('Location: index.php');
+// Código para guardar la información en una base de datos o archivo
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-       
-<head>
-       <meta charset="UTF-8">
-       <meta http-equiv="X-UA-Compatible" content="IE=edge">
-       <meta name="viewport" content="width=device-width, initial-scale=1.0">
-       <title>Inicio</title>
-       <link rel="stylesheet" href="./css/main.css">
-</head>
 
-<body>
-       <?php include_once('./components/header.php'); ?>
-       <div class="container">
-              <div class="login">
-                     <form action="./login.php" method="post">
-                            <h2>Inicio De Sesión</h2>
-                            <input type="text" name="user" placeholder="Ingrese su ID" />
-                            <input type="password" name="pass" placeholder="Ingrese su Contraseña">
-                            <button type="submit" name="btn_iniciar">Iniciar</button>
-                            <a href="#">Pagina oficial TecSM</a>
-                     </form>
-              </div>
-       </div>
-       <?php include_once('./components/footer.php'); ?>
-</body>
 
-</html>
-
-<?php 
-
-if(isset($_POST['btn_iniciar'])) Logear($con);
-function Logear($con){
-       $usuario = $_POST['user'];
-       $pass = $_POST['pass'];
-
-       $query = "select u.nombre, u.apellido_p from usuario as u where u.id_usuario = '$usuario' and u.clave = '$pass';";
-       echo $query;
-       $res = $con->query($query);
-       if($res->num_rows > 0){
-              $data = $res->fetch_array();
-              start(array('id' => $usuario ,'nombre' => $data[0] . " " . $data[1]));
-              header('Location: index.php');
-       } else{
-              echo "<script>alert('ID o clave de acceso incorrectas');</script>";
-       }
-}
-/*Esto es solo una prueba*/
