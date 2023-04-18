@@ -1,37 +1,36 @@
-<form action="guardar.php" method="post">
-  <label for="nombre">Nombre:</label>
-  <input type="text" id="nombre" name="nombre"><br><br>
-  
-  <label for="apellido">Apellido:</label>
-  <input type="text" id="apellido" name="apellido"><br><br>
-  
-  <label for="email">Email:</label>
-  <input type="email" id="email" name="email"><br><br>
-  
-  <button type="submit" name="guardar">Guardar</button>
+<form action="mostrar.php" method="POST">
+  Nombre: <input type="text" name="nombre"><br>
+  Email: <input type="email" name="email"><br>
+  Mensaje: <textarea name="mensaje"></textarea><br>
+  <input type="submit" value="Guardar">
 </form>
 
-///////
-$nombre = $_POST["nombre"];
-$apellido = $_POST["apellido"];
-$email = $_POST["email"];
+///
+<?php
+// Validar y sanitizar los datos recibidos por POST
+$nombre = $_POST['nombre'] ?? '';
+$email = filter_var($_POST['email'], FILTER_SANITIZE_EMAIL) ?? '';
+$mensaje = $_POST['mensaje'] ?? '';
 
-$archivo = fopen("datos.txt", "a");
-fwrite($archivo, $nombre . " " . $apellido . " - " . $email . "\n");
-fclose($archivo);
-///////
-header("Location: otra_pagina.php");
-exit;
-////////
-
-$contenido = file_get_contents("datos.txt");
-$lineas = explode("\n", $contenido);
-
-echo "<table>";
-foreach ($lineas as $linea) {
-    if (!empty($linea)) {
-        list($nombre, $apellido, $email) = explode(" - ", $linea);
-        echo "<tr><td>$nombre</td><td>$apellido</td><td>$email</td></tr>";
-    }
-}
-echo "</table>";
+// Guardar los datos en un archivo
+$file = fopen('datos.txt', 'a');
+fwrite($file, "$nombre | $email | $mensaje\n");
+fclose($file);
+?>
+/////
+<table>
+  <tr>
+    <th>Nombre</th>
+    <th>Email</th>
+    <th>Mensaje</th>
+  </tr>
+  <?php
+  // Leer el archivo de datos
+  $file = fopen('datos.txt', 'r');
+  while (($line = fgets($file)) !== false) {
+    $data = explode(' | ', trim($line));
+    echo "<tr><td>$data[0]</td><td>$data[1]</td><td>$data[2]</td></tr>";
+  }
+  fclose($file);
+  ?>
+</table>
