@@ -1,68 +1,72 @@
-Para lograr lo que necesitas, puedes seguir los siguientes pasos:
+Para lograr esto, necesitarás realizar lo siguiente:
 
-1. Crear un botón en la interfaz de login con el nombre de la asignatura.
-2. Agregar un evento onclick en el botón para que ejecute una función JavaScript.
-3. En la función JavaScript, puedes utilizar Ajax para enviar una solicitud POST a un archivo PHP que se encargará de obtener los datos de la base de datos correspondientes a la asignatura seleccionada y devolverlos como respuesta.
-4. Una vez que recibas la respuesta del archivo PHP, puedes utilizar JavaScript para mostrar los datos en otra interfaz de la página.
+1. Crear un formulario en HTML con un botón que permita al usuario seleccionar la asignatura deseada.
 
-Aquí te dejo un ejemplo de cómo podrías hacerlo:
+2. Al hacer clic en el botón, el formulario enviará una solicitud HTTP POST a un archivo PHP en el servidor.
+
+3. En el archivo PHP, se recibirá la solicitud POST y se procesará para obtener el nombre de la asignatura seleccionada.
+
+4. Se utilizará el nombre de la asignatura para consultar la base de datos MariaDB y recuperar los datos correspondientes.
+
+5. Los datos se devolverán al archivo PHP y se generará una página HTML dinámica que muestre los datos de la asignatura seleccionada.
+
+6. La página HTML generada se enviará como respuesta a la solicitud POST original y se mostrará en el navegador web del usuario.
+
+Aquí te presento un ejemplo de cómo podrías implementar este proceso:
 
 HTML:
-
-```
-<button onclick="mostrarDatos('Matemáticas')">Matemáticas</button>
-<button onclick="mostrarDatos('Historia')">Historia</button>
-<div id="datos"></div>
-```
-
-JavaScript:
-
-```
-function mostrarDatos(asignatura) {
-  var xhttp = new XMLHttpRequest();
-  xhttp.onreadystatechange = function() {
-    if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("datos").innerHTML = this.responseText;
-    }
-  };
-  xhttp.open("POST", "obtener_datos.php", true);
-  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhttp.send("asignatura=" + asignatura);
-}
+```html
+<form action="mostrar_asignatura.php" method="post">
+  <label for="asignatura">Selecciona una asignatura:</label>
+  <select id="asignatura" name="asignatura">
+    <option value="matematicas">Matemáticas</option>
+    <option value="historia">Historia</option>
+    <option value="ciencias">Ciencias</option>
+  </select>
+  <br><br>
+  <input type="submit" value="Mostrar detalles">
+</form>
 ```
 
-PHP (obtener_datos.php):
+En este formulario, se utiliza un elemento `select` con tres opciones de asignaturas posibles. Al hacer clic en el botón "Mostrar detalles", se enviará una solicitud POST al archivo `mostrar_asignatura.php`.
 
-```
+PHP (`mostrar_asignatura.php`):
+```php
 <?php
-$servername = "localhost";
-$username = "usuario";
-$password = "contraseña";
-$dbname = "basedatos";
+// Obtener el nombre de la asignatura seleccionada desde el formulario
+$nom_asign = $_POST["asignatura"];
 
-$asignatura = $_POST["asignatura"];
+// Conectar a la base de datos
+$host = "localhost";
+$user = "tu_usuario";
+$password = "tu_contrasena";
+$dbname = "db_idac";
+$conn = mysqli_connect($host, $user, $password, $dbname);
 
-$conn = new mysqli($servername, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-  die("Conexión fallida: " . $conn->connect_error);
+// Verificar si la conexión fue exitosa
+if (!$conn) {
+  die("Error de conexión: " . mysqli_connect_error());
 }
 
-$sql = "SELECT * FROM materia WHERE nombre = '$asignatura'";
-$result = $conn->query($sql);
+// Consultar los detalles de la asignatura seleccionada
+$sql = "SELECT * FROM asignatura WHERE nom_asign='$nom_asign'";
+$resultado = mysqli_query($conn, $sql);
 
-if ($result->num_rows > 0) {
-  while($row = $result->fetch_assoc()) {
-    echo "Nombre: " . $row["nombre"] . "<br>";
-    echo "Descripción: " . $row["descripcion"] . "<br>";
-    // Agregar aquí los campos de la tabla que deseas mostrar
-  }
-} else {
-  echo "No se encontraron datos para la asignatura seleccionada";
+// Generar una tabla HTML con los detalles de la asignatura
+echo "<table>";
+echo "<tr><th>Nombre de la asignatura</th><th>Descripción</th><th>Horario</th></tr>";
+
+while ($fila = mysqli_fetch_assoc($resultado)) {
+  echo "<tr><td>" . $fila["nom_asign"] . "</td><td>" . $fila["descripcion"] . "</td><td>" . $fila["horario"] . "</td></tr>";
 }
 
-$conn->close();
+echo "</table>";
+
+// Cerrar la conexión a la base de datos
+mysqli_close($conn);
 ?>
 ```
 
-Ten en cuenta que este es solo un ejemplo básico y que debes adaptarlo a tus necesidades específicas, como el nombre de la tabla y el nombre de los campos que deseas mostrar. Además, debes asegurarte de validar y filtrar la entrada del usuario para evitar posibles vulnerabilidades de seguridad.
+En este archivo PHP, se utiliza la variable `$_POST["asignatura"]` para obtener el nombre de la asignatura seleccionada en el formulario. Luego, se conecta a la base de datos y se realiza una consulta SQL para recuperar los detalles de la asignatura correspondiente. Los detalles se muestran en una tabla HTML generada dinámicamente.
+
+Es importante mencionar que este es solo un ejemplo básico para ilustrar el proceso. Para hacerlo más seguro, deberás implementar medidas de seguridad para prevenir inyecciones SQL y otras vulnerabilidades.
