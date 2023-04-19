@@ -1,12 +1,3 @@
-Hay varios errores en el código que podrían estar causando que no se puedan realizar consultas a la base de datos:
-
-1. En ambos archivos HTML, está incluyendo el archivo "consulta_asignatura.php" como un script, pero este archivo es en realidad un archivo PHP que contiene código para conectarse y hacer consultas a la base de datos. Debería ser incluido usando una etiqueta `<php>` en lugar de una etiqueta `<script>`.
-
-2. Dentro del archivo "consulta_asignatura.php", después de definir la función `obtenerAsignatura`, deberías llamarla pasándole el valor de la variable `$_POST['nom_asign']` enviada desde la solicitud AJAX en index.html. Esto se puede hacer agregando la línea `$datos = obtenerAsignatura($_POST['nom_asign']);` justo después de la definición de la función.
-
-3. Después de obtener los datos de la asignatura en la función `obtenerAsignatura`, deberías convertirlos a formato JSON antes de devolverlos usando la función `json_encode`. Esto permitirá que los datos se pasen correctamente como parámetros en la URL en la redirección a la página "recibir_datos.php".
-
-Teniendo en cuenta estos errores, aquí te muestro cómo podrías corregir el código:
 
 index.html:
 ```
