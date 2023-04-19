@@ -1,95 +1,79 @@
-Para lograr lo que necesitas, debes realizar los siguientes pasos:
+index.html
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Login</title>
+	</head>
+	<body>
+		<!-- Botones para cada una de las materias -->
+		<button onclick="obtenerAsignatura('Administración de Servidores')">Matemáticas</button>
+		<button onclick="obtenerAsignatura('Ciencia')">Ciencia</button>
+		<button onclick="obtenerAsignatura('Química')">Química</button>
 
-1. Crear un archivo PHP que se conecte a tu base de datos MariaDB y obtenga los datos de la tabla "asignatura". Este archivo debería tener una función que reciba como parámetro el nombre de la asignatura que se desea consultar y retorne los datos de esa asignatura.
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
+		<script>
+			function obtenerAsignatura(nom_asign)
+			{
+				$.ajax({
+					url: "consulta_asignatura.php",
+					type: "POST",
+					data: { nom_asign: nom_asign },
+					success: function(data) {
+						// Redirigir a la interfaz recibo_registron y mostrar los datos de la asignatura
+						window.location.href = "recibir_datos.php?datos=" + encodeURIComponent(data);
+					}
+				});
+			}
+		</script>
+	</body>
+</html>
 
-2. En tu interfaz de login, debes agregar un botón para cada una de las materias que deseas consultar. A cada uno de estos botones debes asignarles un evento onclick que llame a una función JavaScript que envíe una petición AJAX al archivo PHP creado en el paso 1, pasando el nombre de la asignatura seleccionada como parámetro.
 
-3. La función JavaScript que se encarga de enviar la petición AJAX debe manejar la respuesta del servidor y mostrar los datos recibidos en la interfaz "recibo_registron".
 
-A continuación te muestro un código de ejemplo:
-
-Archivo PHP (consulta_asignatura.php):
-```php
-<?php
-// Conexión a la base de datos
+consulta_asignatura.php
 $servername = "localhost";
-$username = "tu_usuario";
-$password = "tu_contraseña";
+$username = "root";
+$password = "";
 $dbname = "db_idac";
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
 if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+	die("Connection failed: " . $conn->connect_error);
 }
 
 // Función que retorna los datos de una asignatura
-function obtenerAsignatura($nom_asign) {
-  global $conn;
+function obtenerAsignatura($nom_asign)
+{
+	global $conn;
 
-  $sql = "SELECT * FROM asignatura WHERE nom_asign='$nom_asign'";
-  $result = $conn->query($sql);
+	$sql = "SELECT * FROM tasignatura WHERE nom_asign='$nom_asign'";
+	$result = $conn->query($sql);
 
-  if ($result->num_rows > 0) {
-    // Retornar los datos de la asignatura en un arreglo asociativo
-    return $result->fetch_assoc();
-  } else {
-    return null;
-  }
+	if ($result->num_rows > 0) {
+		// Retornar los datos de la asignatura en un arreglo asociativo
+		return $result->fetch_assoc();
+	} else {
+		return null;
+	}
 
-  $conn->close();
+	$conn->close();
 }
 ?>
-```
 
-Interfaz de login (index.html):
-```html
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Login</title>
-</head>
-<body>
-  <!-- Botones para cada una de las materias -->
-  <button onclick="obtenerAsignatura('Matemáticas')">Matemáticas</button>
-  <button onclick="obtenerAsignatura('Ciencia')">Ciencia</button>
-  <button onclick="obtenerAsignatura('Química')">Química</button>
-
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
-  <script>
-    function obtenerAsignatura(nom_asign) {
-      $.ajax({
-        url: "consulta_asignatura.php",
-        type: "POST",
-        data: { nom_asign: nom_asign },
-        success: function(data) {
-          // Redirigir a la interfaz recibo_registron y mostrar los datos de la asignatura
-          window.location.href = "recibo_registron.php?datos=" + encodeURIComponent(data);
-        }
-      });
-    }
-  </script>
-</body>
-</html>
-```
-
-Interfaz recibo_registron (recibo_registron.php):
-```php
+recibir_datos.php
 <?php
 if (isset($_GET['datos'])) {
-  // Obtener los datos de la asignatura desde la URL
-  $asignatura = json_decode(urldecode($_GET['datos']), true);
+	// Obtener los datos de la asignatura desde la URL
+	$asignatura = json_decode(urldecode($_GET['datos']), true);
 
-  if ($asignatura != null) {
-    // Mostrar los datos de la asignatura en la interfaz
-    echo "Nombre de la asignatura: " . $asignatura['nom_asign'] . "<br>";
-    echo "Descripción de la asignatura: " . $asignatura['descripcion'] . "<br>";
-    // ...
-  } else {
-    echo "No se encontraron datos para la asignatura especificada.";
-  }
+	if ($asignatura != null) {
+		// Mostrar los datos de la asignatura en la interfaz
+		echo "Nombre de la asignatura: " . $asignatura['nom_asign'] . "<br>";
+		
+		// ...
+	} else {
+		echo "No se encontraron datos para la asignatura especificada.";
+	}
 }
 ?>
-``` 
-
-Ten en cuenta que este código es solo un ejemplo y debes adaptarlo a tus necesidades específicas. Además, este código no implementa ninguna medida de seguridad y deberías asegurarte de validar cualquier entrada que reciba tu aplicación.
