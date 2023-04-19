@@ -1,37 +1,68 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Formulario de registro</title>
-</head>
-<body>
-	<h1>Registro de usuario</h1>
-	<form method="post" action="recibir_datos.php">
-		<label for="nombre">Nombre:</label>
-		<input type="text" id="nombre" name="nombre"><br>
+Para lograr lo que necesitas, puedes seguir los siguientes pasos:
 
-		<label for="apellido">Apellido:</label>
-		<input type="text" id="apellido" name="apellido"><br>
+1. Crear un botón en la interfaz de login con el nombre de la asignatura.
+2. Agregar un evento onclick en el botón para que ejecute una función JavaScript.
+3. En la función JavaScript, puedes utilizar Ajax para enviar una solicitud POST a un archivo PHP que se encargará de obtener los datos de la base de datos correspondientes a la asignatura seleccionada y devolverlos como respuesta.
+4. Una vez que recibas la respuesta del archivo PHP, puedes utilizar JavaScript para mostrar los datos en otra interfaz de la página.
 
-		<button type="submit" name="enviar">Enviar</button>
-	</form>
-</body>
-</html>
+Aquí te dejo un ejemplo de cómo podrías hacerlo:
 
-//////
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Datos recibidos</title>
-</head>
-<body>
-	<h1>Datos recibidos</h1>
-	<?php
-	if(isset($_POST['enviar'])){
-		$nombre = $_POST['nombre'];
-		$apellido = $_POST['apellido'];
-		echo "<p>El nombre ingresado es: " . $nombre . "</p>";
-		echo "<p>El apellido ingresado es: " . $apellido . "</p>";
-	}
-	?>
-</body>
-</html>
+HTML:
+
+```
+<button onclick="mostrarDatos('Matemáticas')">Matemáticas</button>
+<button onclick="mostrarDatos('Historia')">Historia</button>
+<div id="datos"></div>
+```
+
+JavaScript:
+
+```
+function mostrarDatos(asignatura) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("datos").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("POST", "obtener_datos.php", true);
+  xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhttp.send("asignatura=" + asignatura);
+}
+```
+
+PHP (obtener_datos.php):
+
+```
+<?php
+$servername = "localhost";
+$username = "usuario";
+$password = "contraseña";
+$dbname = "basedatos";
+
+$asignatura = $_POST["asignatura"];
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+  die("Conexión fallida: " . $conn->connect_error);
+}
+
+$sql = "SELECT * FROM materia WHERE nombre = '$asignatura'";
+$result = $conn->query($sql);
+
+if ($result->num_rows > 0) {
+  while($row = $result->fetch_assoc()) {
+    echo "Nombre: " . $row["nombre"] . "<br>";
+    echo "Descripción: " . $row["descripcion"] . "<br>";
+    // Agregar aquí los campos de la tabla que deseas mostrar
+  }
+} else {
+  echo "No se encontraron datos para la asignatura seleccionada";
+}
+
+$conn->close();
+?>
+```
+
+Ten en cuenta que este es solo un ejemplo básico y que debes adaptarlo a tus necesidades específicas, como el nombre de la tabla y el nombre de los campos que deseas mostrar. Además, debes asegurarte de validar y filtrar la entrada del usuario para evitar posibles vulnerabilidades de seguridad.
