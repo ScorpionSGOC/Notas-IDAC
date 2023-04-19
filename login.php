@@ -1,4 +1,6 @@
-El principal error del código es que la función obtenerAsignatura en el archivo consulta_asignatura.php no se está llamando en ningún momento. Para solucionarlo, se debe agregar un código en el archivo consulta_asignatura.php que permita llamar a la función obtenerAsignatura cuando se reciba el valor de nom_asign a través del método POST.
+El principal error del código es que la función obtenerAsignatura en el archivo consulta_asignatura.php 
+no se está llamando en ningún momento. Para solucionarlo, se debe agregar un código en el archivo consulta_asignatura.php 
+que permita llamar a la función obtenerAsignatura cuando se reciba el valor de nom_asign a través del método POST.
 
 Aquí está el código corregido para consulta_asignatura.php:
 
