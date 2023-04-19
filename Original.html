@@ -11,7 +11,7 @@ index.html:
 		<button onclick="obtenerAsignatura('Química')">Química</button>
 
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
-		<script src="consulta_asignatura.php"> </script> <!-- incluimos el archivo consulta_asignatura.php -->
+		<script type="text/php" src="consulta_asignatura.php"> </script> <!-- incluimos el archivo consulta_asignatura.php -->
 		<script>
 			function obtenerAsignatura(nom_asign)
 			{
@@ -69,16 +69,17 @@ function obtenerAsignatura($nom_asign)
 {
 	global $conn;
 
-	$sql = "SELECT * FROM 'tasignatura' WHERE nom_asign ='$nom_asign'";
+	$sql = "SELECT * FROM tasignatura WHERE nom_asign ='$nom_asign'";
 	$result = $conn->query($sql);
 
 	if ($result->num_rows > 0) {
 		// Retornar los datos de la asignatura en un arreglo asociativo
 		return $result->fetch_assoc();
 	} else {
+		$conn->close();
 		return null;
 	}
 
-	$conn->close();
+	
 }
-?> '''
+?>  '''
