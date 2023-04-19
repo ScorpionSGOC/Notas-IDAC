@@ -1,8 +1,14 @@
 Errores encontrados:
 
-- En index.html, en la línea que incluye el archivo consulta_asignatura.php, no se especifica que es un script de tipo PHP, por lo que no se ejecutará correctamente. Se debe cambiar a: `<script type="text/php" src="consulta_asignatura.php"></script>`
-- En consulta_asignatura.php, en la línea que hace la consulta a la base de datos, se usa comillas simples alrededor del nombre de la tabla, lo cual produce un error en la consulta. Debe cambiarse a comillas dobles: `$sql = "SELECT * FROM tasignatura WHERE nom_asign ='$nom_asign'";`
-- En consulta_asignatura.php, después de ejecutar una consulta a la base de datos y hacer un return, no se cierra la conexión a la base de datos, lo cual puede causar problemas de rendimiento. Se debe mover `$conn->close();` antes del return.
+- En index.html, en la línea que incluye el archivo consulta_asignatura.php, 
+no se especifica que es un script de tipo PHP, por lo que no se ejecutará correctamente. 
+Se debe cambiar a: `<script type="text/php" src="consulta_asignatura.php"></script>`
+- En consulta_asignatura.php, en la línea que hace la consulta a la base de datos, 
+se usa comillas simples alrededor del nombre de la tabla, lo cual produce un error en la consulta. 
+Debe cambiarse a comillas dobles: `$sql = "SELECT * FROM tasignatura WHERE nom_asign ='$nom_asign'";`
+- En consulta_asignatura.php, después de ejecutar una consulta a la base de datos y hacer un return, 
+no se cierra la conexión a la base de datos, lo cual puede causar problemas de rendimiento. 
+Se debe mover `$conn->close();` antes del return.
 
 Código corregido:
 
