@@ -1,79 +1,72 @@
-index.html
-<!DOCTYPE html>
-<html>
-	<head>
-		<title>Login</title>
-	</head>
-	<body>
-		<!-- Botones para cada una de las materias -->
-		<button onclick="obtenerAsignatura('Administración de Servidores')">Matemáticas</button>
-		<button onclick="obtenerAsignatura('Ciencia')">Ciencia</button>
-		<button onclick="obtenerAsignatura('Química')">Química</button>
+¡Por supuesto! Aquí te muestro un ejemplo más detallado de cómo modificar el código para que funcione correctamente:
 
-		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"> </script>
-		<script>
-			function obtenerAsignatura(nom_asign)
-			{
-				$.ajax({
-					url: "consulta_asignatura.php",
-					type: "POST",
-					data: { nom_asign: nom_asign },
-					success: function(data) {
-						// Redirigir a la interfaz recibo_registron y mostrar los datos de la asignatura
-						window.location.href = "recibir_datos.php?datos=" + encodeURIComponent(data);
-					}
-				});
-			}
-		</script>
-	</body>
+index.html 
+```
+<!DOCTYPE html> 
+<html> 
+    <head> 
+        <title>Login</title> 
+    </head> 
+    <body> 
+        <!-- Botones para cada una de las materias --> 
+        <button onclick="obtenerAsignatura('Administración de Servidores')">Matemáticas</button> 
+        <button onclick="obtenerAsignatura('Ciencia')">Ciencia</button> 
+        <button onclick="obtenerAsignatura('Química')">Química</button> 
+
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script> 
+        <script src="consulta_asignatura.php"></script> <!-- incluimos el archivo consulta_asignatura.php -->
+        <script> 
+            function obtenerAsignatura(nom_asign) { 
+                $.ajax({ 
+                    url: "consulta_asignatura.php", 
+                    type: "POST", 
+                    data: { nom_asign: nom_asign }, 
+                    success: function(data) { 
+                        // Redirigir a la interfaz recibo_registron y mostrar los datos de la asignatura 
+                        window.location.href = "recibir_datos.php?datos=" + encodeURIComponent(data); 
+                    } 
+                }); 
+            } 
+        </script> 
+    </body> 
 </html>
+``` 
 
+consulta_asignatura.php 
+```
+<?php 
+$servername = "localhost"; 
+$username = "root"; 
+$password = ""; 
+$dbname = "db_idac"; 
 
+$conn = new mysqli($servername, $username, $password, $dbname); 
 
-consulta_asignatura.php
-$servername = "localhost";
-$username = "root";
-$password = "";
-$dbname = "db_idac";
+if ($conn->connect_error) { 
+    die("Connection failed: " . $conn->connect_error); 
+} 
 
-$conn = new mysqli($servername, $username, $password, $dbname);
+// Función que retorna los datos de una asignatura 
+function obtenerAsignatura($nom_asign) { 
+    global $conn; 
 
-if ($conn->connect_error) {
-	die("Connection failed: " . $conn->connect_error);
-}
+    $sql = "SELECT * FROM tasignatura WHERE nom_asign='$nom_asign'"; 
+    $result = $conn->query($sql); 
 
-// Función que retorna los datos de una asignatura
-function obtenerAsignatura($nom_asign)
-{
-	global $conn;
+    if ($result->num_rows > 0) { 
+        // Retornar los datos de la asignatura en un arreglo asociativo 
+        return $result->fetch_assoc(); 
+    } else { 
+        return null; 
+    } 
 
-	$sql = "SELECT * FROM tasignatura WHERE nom_asign='$nom_asign'";
-	$result = $conn->query($sql);
+    $conn->close(); 
+} 
+?> 
+```
 
-	if ($result->num_rows > 0) {
-		// Retornar los datos de la asignatura en un arreglo asociativo
-		return $result->fetch_assoc();
-	} else {
-		return null;
-	}
+En el código HTML, hemos agregado la línea `<script src="consulta_asignatura.php"></script>`, que incluye el archivo "consulta_asignatura.php" y nos permite utilizar la función "obtenerAsignatura" definida en él. 
 
-	$conn->close();
-}
-?>
+En el archivo "consulta_asignatura.php", hemos eliminado la verificación `if (isset($_GET['datos']))` ya que no es necesaria aquí, y envolveremos la función `obtenerAsignatura` en el tag `<script>` para que pueda ser incluida en el archivo HTML. 
 
-recibir_datos.php
-<?php
-if (isset($_GET['datos'])) {
-	// Obtener los datos de la asignatura desde la URL
-	$asignatura = json_decode(urldecode($_GET['datos']), true);
-
-	if ($asignatura != null) {
-		// Mostrar los datos de la asignatura en la interfaz
-		echo "Nombre de la asignatura: " . $asignatura['nom_asign'] . "<br>";
-		
-		// ...
-	} else {
-		echo "No se encontraron datos para la asignatura especificada.";
-	}
-}
-?>
+Ahora, cuando se hace clic en uno de los botones, se llama a la función "obtenerAsignatura" que envía una solicitud AJAX al archivo "consulta_asignatura.php" para obtener los datos de la asignatura correspondiente. Luego, se redirige a la página "recibir_datos.php" con los datos de la asignatura codificados en la URL.
