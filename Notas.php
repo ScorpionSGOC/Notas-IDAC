@@ -1,55 +1,56 @@
-Para crear un botón personalizado con CSS y HTML que tenga un símbolo de "+" en la parte inferior y un texto en la parte superior, puedes usar la propiedad "flex" de CSS para hacer que el botón se redimensione según sea necesario. A continuación se muestra un ejemplo de cómo hacerlo:
+Para crear un botón personalizado con un símbolo de "+" en la parte inferior y un texto en la parte superior utilizando Bootstrap, sigue estos pasos:
 
-HTML:
+1. Asegúrate de incluir las dependencias necesarias de Bootstrap en tu archivo HTML (CSS y JS):
 
+```html
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</head>
+<body>
+  <!-- Aquí va tu código HTML -->
+</body>
+</html>
 ```
-<div class="button-container">
-  <button class="custom-button">
-    <span class="icon">+</span>
-    <span class="text">Enviar</span>
-  </button>
+
+2. Ahora crea el botón personalizado utilizando el sistema de grid de Bootstrap y clases de botón, aquí un ejemplo:
+
+```html
+<div class="container mt-5">
+  <div class="row">
+    <div class="col">
+      <button class="btn btn-primary custom-button">
+        <span class="d-block">Texto superior</span>
+        <span class="d-block">+</span>
+      </button>
+    </div>
+  </div>
 </div>
 ```
 
-CSS:
+3. Puedes ajustar el estilo del botón añadiendo reglas CSS personalizadas en el elemento `<style>` en el encabezado o en un archivo de estilo aparte:
 
-```
-.button-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-}
-
-.custom-button {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  background-color: #0077cc;
-  color: #ffffff;
-  border-radius: 4px;
-  border: none;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.custom-button:hover {
-  background-color: #00599c;
-}
-
-.icon {
-  font-size: 24px;
-  margin-bottom: 4px;
-}
-
-.text {
-  font-size: 16px;
-  text-transform: uppercase;
-}
+```html
+<style>
+  .custom-button {
+    font-size: 24px;
+  }
+  .custom-button span:first-child {
+    font-size: 14px;
+    font-weight: bold;
+  }
+  .custom-button span:last-child {
+    font-size: 30px;
+    font-weight: bold;
+    margin-top: -5px;
+  }
+</style>
 ```
 
-En este ejemplo, la clase "button-container" hace que el botón se centre verticalmente y horizontalmente en la página. La clase "custom-button" establece las propiedades de estilo del botón, como el fondo, el color del texto, el tamaño de letra, la posición de los elementos internos, etc. La clase "icon" se usa para establecer el tamaño y la posición del símbolo "+" y la clase "text" se usa para establecer el tamaño y la posición del texto en la parte superior del botón.
-
-Puede ajustar las propiedades de estilo según sea necesario para adaptar el botón a sus necesidades específicas.
+Con estos pasos, tendrás creado un botón personalizado con Bootstrap que tiene un símbolo de "+" en la parte inferior y un texto en la parte superior. Puedes ajustar el estilo y tamaño según lo necesites en las reglas CSS personalizadas.
