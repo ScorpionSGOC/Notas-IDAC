@@ -1,54 +1,55 @@
-Aquí te dejo el código HTML y CSS para crear un botón personalizado con un símbolo de "+" en la parte inferior y un texto en la parte superior:
+Para crear un botón personalizado con CSS y HTML que tenga un símbolo de "+" en la parte inferior y un texto en la parte superior, puedes usar la propiedad "flex" de CSS para hacer que el botón se redimensione según sea necesario. A continuación se muestra un ejemplo de cómo hacerlo:
+
+HTML:
 
 ```
-<div class="button">
-  <span class="text">Agregar</span>
-  <span class="icon">+</span>
+<div class="button-container">
+  <button class="custom-button">
+    <span class="icon">+</span>
+    <span class="text">Enviar</span>
+  </button>
 </div>
 ```
 
-El HTML es bastante sencillo. Creamos un contenedor "button" que contiene dos elementos hijos: una etiqueta "span" con la clase "text" para el texto del botón y otra etiqueta "span" con la clase "icon" para el símbolo de "+".
+CSS:
 
 ```
-.button {
+.button-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+}
+
+.custom-button {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 120px;
-  height: 120px;
-  background-color: #007bff;
-  border-radius: 50%;
-  color: #fff;
-  font-size: 20px;
-  font-weight: bold;
-  text-transform: uppercase;
+  padding: 16px;
+  background-color: #0077cc;
+  color: #ffffff;
+  border-radius: 4px;
+  border: none;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s ease;
 }
 
-.button:hover {
-  background-color: #0062cc;
+.custom-button:hover {
+  background-color: #00599c;
 }
 
 .icon {
-  margin-top: auto;
-  font-size: 48px;
+  font-size: 24px;
+  margin-bottom: 4px;
 }
 
 .text {
-  margin-bottom: auto;
-  text-align: center;
-  padding: 10px;
+  font-size: 16px;
+  text-transform: uppercase;
 }
 ```
 
-En el CSS, primero establecemos las propiedades del contenedor "button". Es importante señalar que utilizamos flex-box para centrar verticalmente los elementos hijos del contenedor. Así, los elementos "text" y "icon" quedarán alineados al centro del botón. También establecemos un tamaño fijo para el botón, un fondo de color y estilizamos el texto.
+En este ejemplo, la clase "button-container" hace que el botón se centre verticalmente y horizontalmente en la página. La clase "custom-button" establece las propiedades de estilo del botón, como el fondo, el color del texto, el tamaño de letra, la posición de los elementos internos, etc. La clase "icon" se usa para establecer el tamaño y la posición del símbolo "+" y la clase "text" se usa para establecer el tamaño y la posición del texto en la parte superior del botón.
 
-Luego, agregamos un estilo para el botón cuando pasa el cursor sobre él, que cambia ligeramente el color de fondo.
-
-Para la clase "icon", agregamos un margen superior automático para que se alinee al fondo del botón, junto con un tamaño de fuente más grande.
-
-Finalmente, para la clase "text", agregamos un margen inferior automático para que se alinee al tope del botón, así como un texto centrado y un relleno para que no quede pegado a los bordes del botón. 
-
-Con estas propiedades podemos obtener un botón personalizado con un símbolo de "+" en la parte inferior y un texto en la parte superior usando flex-box, CSS y HTML.
+Puede ajustar las propiedades de estilo según sea necesario para adaptar el botón a sus necesidades específicas.
