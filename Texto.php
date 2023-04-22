@@ -1,4 +1,5 @@
 Puedes agregar el texto de "Agregar"  que se encuentra en el botón en la parte superior del diseño:
+como se crea un botón personalizado con un símbolo de mas en medio, con html y ccs.
 <!DOCTYPE html>
 <html>
 	<head>
