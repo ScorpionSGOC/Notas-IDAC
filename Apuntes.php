@@ -1,32 +1,30 @@
 <style>
-#imglogotec{
+.menu{
+				background-color: #1A1818;
+				display: flex;
+				align-items: center;
+				height: 300px;
+			}
+			.title-wrapper{
+				display: flex;
+				align-items: center;
+			}
+
+			#imglogotec{
 				width: 10%;
 				height: 50%;
+				margin-right: 10px;
 				
+			}
+			
+			.txtitsm{
+				font-size: 40px;
+				color: #fff;
 			}
 
 			h1{
 				color: #fff;
 				margin-bottom: 0;
-			}
-			.txtitsm{
-				font-size: 40px;
-				color: #fff;
-			}
-			.menu{
-				background-color: #1A1818;
-				display: flex;
-				flex-direction: column;
-				text-align: center;
-				height: 300px;
-				justify-content: center;
-				align-items: center;
-			}
-			
-			.title-wrapper{
-				display: flex;
-				flex-direction: column;
-				align-items: center;
 			}
 </style>
 
