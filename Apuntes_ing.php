@@ -26,7 +26,7 @@ TASK 1:
 1.- I am reading an English book.
 2.- She is singing her favorite song in the shower.
 3.- They are dancing to the rhythm of the music.
-4.- He is eating a sandwich for his lunch.
+4.- He is eating a sandwich for lunch.
 5.- We are swimming in the pool to cool down
 6.- She is making a delicious cake.
 7.- I am doing my homework before going out.
@@ -36,7 +36,7 @@ TASK 1:
 11.- She is running around the park.
 12.- He is sleeping peacefully on the bed.
 13.- She is wearing a blue dress
-14.- They are flying to the Europe.
+14.- They are flying to Europe.
 15.- She is shopping for new shoes at the mall.
 
 
