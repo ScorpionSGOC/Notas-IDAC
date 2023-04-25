@@ -1,82 +1,89 @@
-Para mostrar una materia en una tabla HTML desde la base de datos MariaDB, primero debemos recuperar los datos necesarios de la tabla intermedia y la tabla de asignaturas. Podemos hacerlo mediante una consulta JOIN.
+Para mostrar una materia en una tabla HTML desde la base de datos MariaDB, necesitarás utilizar un lenguaje de programación del lado del servidor como PHP para poder conectarte a la base de datos, realizar consultas y luego generar el código HTML en función de los resultados obtenidos. A continuación se presenta un ejemplo de cómo hacerlo utilizando PHP, HTML y SQL:
 
-Supongamos que tenemos las siguientes tablas en nuestra base de datos:
+1. Crea un archivo PHP, por ejemplo `mostrar_materias.php`.
 
-Tabla "usuarios":
+2. Asegúrate de tener la configuración de conexión a la base de datos dentro de tu archivo PHP. Por ejemplo, puedes crear un archivo `conexion.php`:
+```php
+<?php
+$servername = "localhost";
+$username = "username";
+$password = "password";
+$database = "nombre_de_tu_base_de_datos";
 
-| RFC      | Nombre    |
-| -------- | --------- |
-| ABC123   | Juan      |
-| DEF456   | Maria     |
-| GHI789   | Carlos    |
+$conn = new mysqli($servername, $username, $password, $database);
 
-Tabla "asignaturas":
-
-| claveasig | materia   |
-| --------- | --------- |
-| MAT101    | Matemáticas |
-| FIS101    | Física     |
-| QUI101    | Química    |
-
-Tabla "usuarios_asignaturas" (tabla intermedia):
-
-| RFC      | claveasig |
-| -------- | --------- |
-| ABC123   | MAT101    |
-| ABC123   | FIS101    |
-| DEF456   | QUI101    |
-| GHI789   | FIS101    |
-
-Para mostrar las materias de cada usuario en una tabla HTML, podemos utilizar la siguiente consulta:
-
+if ($conn->connect_error) {
+  die("Error al conectar: " . $conn->connect_error);
+}
+?>
 ```
-SELECT usuarios.Nombre, asignaturas.materia
-FROM usuarios
-JOIN usuarios_asignaturas ON usuarios.RFC = usuarios_asignaturas.RFC
-JOIN asignaturas ON usuarios_asignaturas.claveasig = asignaturas.claveasig
-WHERE usuarios.RFC = 'ABC123';
+3. En `mostrar_materias.php`, incluye el archivo de conexión y realiza la consulta a la base de datos:
+```php
+<?php
+include 'conexion.php';
+
+$sql = "SELECT tasignatura.claveasig, tasignatura.nombre AS asignatura, usuario.RFC, usuario.nombre AS usuario_nombre
+        FROM c_sig_usu
+        INNER JOIN tasignatura ON tasignatura.claveasig = c_sig_usu.claveasig
+        INNER JOIN usuario ON usuario.RFC = c_sig_usu.RFC";
+$result = $conn->query($sql);
+?>
 ```
-
-Esta consulta nos devuelve el nombre del usuario "Juan" y las materias "Matemáticas" y "Física", ya que son las asignaturas que tiene asignadas en la tabla intermedia.
-
-Ahora podemos utilizar esta consulta en nuestro código HTML para mostrar los datos en una tabla:
-
+4. Crea la tabla HTML y usa un bucle para mostrar los registros obtenidos en la consulta:
 ```html
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mostrar materias</title>
+  <style>
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+    th, td {
+      border: 1px solid black;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #f2f2f2;
+    }
+  </style>
+</head>
+<body>
+
+<h2>Materias asignadas</h2>
+
 <table>
-  <thead>
-    <tr>
-      <th>Nombre</th>
-      <th>Materia</th>
-    </tr>
-  </thead>
-  <tbody>
-    <?php
-    // Conexión a la base de datos
-    $conexion = new mysqli("localhost", "usuario", "contraseña", "basededatos");
-
-    // Consulta con JOIN para obtener los datos necesarios
-    $sql = "SELECT usuarios.Nombre, asignaturas.materia
-            FROM usuarios
-            JOIN usuarios_asignaturas ON usuarios.RFC = usuarios_asignaturas.RFC
-            JOIN asignaturas ON usuarios_asignaturas.claveasig = asignaturas.claveasig
-            WHERE usuarios.RFC = 'ABC123'";
-
-    // Ejecución de la consulta y obtención de resultados
-    $resultados = $conexion->query($sql);
-
-    // Recorrido de los resultados y creación de filas en la tabla
-    while ($fila = $resultados->fetch_assoc()) {
+  <tr>
+    <th>Clave de asignatura</th>
+    <th>Asignatura</th>
+    <th>RFC</th>
+    <th>Nombre del usuario</th>
+  </tr>
+  <?php
+  if ($result->num_rows > 0) {
+    while($row = $result->fetch_assoc()) {
       echo "<tr>";
-      echo "<td>" . $fila["Nombre"] . "</td>";
-      echo "<td>" . $fila["materia"] . "</td>";
+      echo "<td>" . $row["claveasig"] . "</td>";
+      echo "<td>" . $row["asignatura"] . "</td>";
+      echo "<td>" . $row["RFC"] . "</td>";
+      echo "<td>" . $row["usuario_nombre"] . "</td>";
       echo "</tr>";
     }
-
-    // Cierre de la conexión a la base de datos
-    $conexion->close();
-    ?>
-  </tbody>
+  } else {
+    echo "<tr><td colspan='4'>No se encontraron registros</td></tr>";
+  }
+  $conn->close();
+  ?>
 </table>
+
+</body>
+</html>
 ```
 
-En este ejemplo, estamos mostrando las materias del usuario con RFC "ABC123". Para mostrar las materias de cualquier otro usuario, basta con cambiar el valor de la condición WHERE en la consulta.
+Este ejemplo supone que tienes una tabla de usuario con la clave primaria "RFC" y la tabla "tasignatura" con la clave "claveasig". La tabla intermedia "c_sig_usu" asocia cada materia con un usuario usando las llaves foráneas "RFC" y "claveasig". Este código PHP se conecta a tu base de datos MariaDB, realiza la consulta y muestra los resultados en una tabla HTML.
+
+Asegúrate de cambiar los valores de conexión a la base de datos y las claves de acceso en el archivo `conexion.php`.
+
+También puedes adaptar este ejemplo según tus necesidades y la estructura de tu base de datos.
