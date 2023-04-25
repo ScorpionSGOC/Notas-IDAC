@@ -19,8 +19,11 @@
     fly
     shop.
 
+                              Monday, April 24th, 2023. Osvaldo Cruz
+TASK 1:
 
-1.- I am currently reading an English book.
+
+1.- I am reading an English book.
 2.- She is singing her favorite song in the shower.
 3.- They are dancing to the rhythm of the music.
 4.- He is eating a sandwich for his lunch.
@@ -32,9 +35,19 @@
 10.- They are playing basketball at the playground.
 11.- She is running around the park.
 12.- He is sleeping peacefully on the bed.
-13.- She is wearing a blue dress to the party tonight.
-14.- They are flying to the Europe for their summer vacation.
+13.- She is wearing a blue dress
+14.- They are flying to the Europe.
 15.- She is shopping for new shoes at the mall.
+
+
+
+
+
+
+
+
+
+
 
 
 1. Aí am kúrrentli rídin an ínglish buk.
