@@ -87,3 +87,17 @@ Este ejemplo supone que tienes una tabla de usuario con la clave primaria "RFC" 
 Asegúrate de cambiar los valores de conexión a la base de datos y las claves de acceso en el archivo `conexion.php`.
 
 También puedes adaptar este ejemplo según tus necesidades y la estructura de tu base de datos.
+
+
+
+Tabla "usuario"
+rfc    |PRIMARY KEY.
+Nombre.|
+
+Tabla "tasignatura"
+claveasig |PRIMARY KEY.
+materia.  |
+
+Tabla"c_sig_usu"
+claveasig |FOREIGN KEY.
+rfc       |FOREIGN KEY.
