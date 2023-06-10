@@ -1,214 +1,141 @@
 <?php
-ob_start();
+session_start();
+
+// Incluye el archivo de conexión a la base de datos
+require_once '../config/conexion.php';
+
+// Verifica si la variable de sesión 'RFC' está definida
+if (isset($_SESSION['RFC'])) {
+    // obtiene el RFC del docente de la variable de sesión
+    $rfc = $_SESSION['RFC'];
+
+    // obtiene la conexión a la base de datos
+    $conn = conexion();
+
+    // consulta la tabla de docentes para obtener los datos del docente
+    $sql = "SELECT RFC, nombre, apellido_pa, apellido_ma FROM usuario WHERE RFC='$rfc'";
+    $resultado = mysqli_query($conn, $sql);
+
+    // verifica si se encontró el docente en la base de datos
+    if (mysqli_num_rows($resultado) == 1) {
+        // si se encontró, obtiene los datos del docente
+        $fila = mysqli_fetch_assoc($resultado);
+
+
+    } else {
+        // si no se encontró el docente, muestra un mensaje de error
+        echo "Error al obtener los datos del docente";
+    }
+
+    //obtener los datos de la tabla asig_materia para el usuario logueado
+    $sql = "SELECT *
+    FROM asig_materia 
+    INNER JOIN usuario ON asig_materia.idUsuario = usuario.id_usuario
+    INNER JOIN materia ON asig_materia.id_de_asignatura = materia.id_materia
+    WHERE usuario.RFC = '$rfc'";
+
+    $result = mysqli_query($conn, $sql);
+
+    // cierra la conexión a la base de datos
+    mysqli_close($conn);
+} else {
+    header('Location: /IDAC/index.php');
+    exit();
+}
 ?>
 
 
 <!DOCTYPE html>
-<html lang="es">
-	<head>
-		<meta charset="UTF-8">
-		<meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<title>Document</title>
-		<style>
-			.container {
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				margin: auto;
+<html lang="en">
 
-			}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,
+                initial-scale=1.0">
+    <title>docentes</title>
+    <link rel="stylesheet" href="../css/estyle.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.7/dist/umd/popper.min.js"
+		integrity="sha384-zYPOMqeu1DAVkHiLqWBUTcbYfZ8osu1Nd6Z89ify25QV9guujx43ITvfi12/QExE"
+		crossorigin="anonymous"> </script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.min.js"
+		integrity="sha384-Y4oOpwW3duJdCWv5ly8SCFYWqFDsfob/3GkgExXKV4idmbt98QcxXYs9UoXAB7BZ"
+		crossorigin="anonymous"> </script>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/css/bootstrap.min.css" rel="stylesheet"
+		integrity="sha384-KK94CHFLLe+nY2dmCWGMq91rCGa5gtU4mk92HdvYe+M/SXH301p5ILy+dN9+nJOZ" crossorigin="anonymous">
+</head>
+<?php require_once('../componentes/header.php') ?>
 
-			.s1 {
-				color: black;
-				font-family: Arial, sans-serif;
-				font-style: normal;
-				font-weight: bold;
-				text-decoration: none;
-				font-size: 11pt;
-			}
-			p {
-				color: black;
-				font-family: Arial, sans-serif;
-				font-style: normal;
-				text-decoration: none;
-				font-size: 12pt;
-				margin: 0pt;
-			}
-			.encabezado, tbody {
-				vertical-align: top;
-				overflow: visible;
-			}
-			/*Encabezado Fin*/
-			.indice{
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				margin: 10px;
-				text-align: center;
+<body>
+    
+    <div class="container-fluid">
+        <div class="row">
 
-			}
-			.cuerpo{
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				text-align: justify;
-				align-items: center;
-				margin: 10px;
+            <div id="button" class="col-sm-12 col-md-4 col-lg-4
+                            col-xl-4">
+                <div id="button_1" class="d-flex flex-column
+                                bd-highlight position-fixed p-3 bg-light" style="width: 200px;">
+                    
+                    <a id="index_1" class="btn btn-primary mt-2" href="accion/logout.php" role="button">Cerrar
+                        Sesión</a>
 
-			}
+                </div>
+            </div>
 
-			.tabla {
-				border: 1px solid black;
-				padding: 10px;
-				width: 80%;
-				margin: 10px;
-			}
+            <div id="campo" class="col-sm-12 col-md-8 col-lg-8
+                        col-xl-8">
+                <div class="accordion" id="accordionExample">
+                    <div class="accordion-item">
+                        <h2 class="accordion-header">
+                            <br>
+                            <?php echo "<h3>Docente: " . $fila['nombre']. " " . $fila['apellido_pa'] . " " .$fila['apellido_ma'] . "</h3>"; ?>
+                        </h2>
+<table>
+  <thead>
+    <tr>
+      <th>Nombre Materia</th>
+      <th>Clave Materia</th>
+      <th>Editar</th>
+      <th>Editar</th>
+    </tr>
+  </thead>
+  <tbody>
 
+  <style>
+    button a {
+        text-decoration: none;
+        color: white;
+    }
+</style>
 
-
-			.text{
-				right: 30px;
-			}
-			.textitulo{
-				margin-left: -950px;
-
-			}
-			/*↓↓↓tabla triple↓↓↓*/
-			.tabla_3 {
-				border: 1px solid black;
-				padding: 10px;
-				width: 80%;
-				margin: 10px;
-				border-collapse: collapse;
-				table-layout: fixed;
-			}
-
-			.linea{
-				padding: 10px;
-				border: 1px solid black;
-				width: 23%;
-
-			}
-			.linea-2{
-				padding: 10px;
-				border: 1px solid black;
-				width: 23%;
-				text-align: justify;
-				word-break: break-word;
-				height: 100px;
-				vertical-align: top;
-
-
-			}
-			.linea-5{
-				padding: 10px;
-				border: 1px solid black;
-				width: 10%;
-				word-break: break-word;
-				vertical-align: top;
-
-			}
-			/**/
-			.indice{
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				margin: 5px;
-				text-align: center;
-				font-size: 16px;
-				font-weight: bold;
-				font-family: Arial;
-				padding: 5px;
-				margin-bottom: 0pt;
-				margin-top: 0pt;
-			}
-
-			.indice_2{
-				display: flex;
-				flex-direction: column;
-				justify-content: center;
-				align-items: center;
-				margin: 10px;
-				text-align: center;
-				font-size: 16px;
-				font-family: Arial;
-				margin: auto;
-				line-height: 10px;
-
-			}
-			.indece_2, p{
-				margin: 10px;
-			}
-		</style>
-	</head>
-	<?php
-	include("./funcion.php");
-	$Periodo = obtenerPeriodo();
-	$Nommateria = obtenernombremateria();	
-	?>
-	<body>
-		<div class="container">
-			<div class="">
-				<table class="encabezado" style="border-collapse:collapse;margin-left:22.91pt" cellspacing="0">
-					<tr style="height:28pt">
-						<td style="width:149pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt" rowspan="3">
-							<p style="text-indent: 0pt;text-align: left;"><br/></p>
-							<p style="padding-left: 22pt;text-indent: 0pt;text-align: left;"><span><img width="131" height="101" alt="image" src="./imagenes/logo_intru.png"/></span></p></td>
-						<td style="width:333pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt" rowspan="2">
-							<p class="s1" style="padding-left: 39pt;text-indent: 0pt;line-height: 108%;text-align: left;"><span>Instrumentación Didáctica para la formación y desarrollo de competencias profesionales</span></p></td>
-						<td style="width:170pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
-							<p class="s1" style="padding-left: 39pt;padding-right: 26pt;text-indent: 0pt;line-height: 14pt;text-align: left;"><span>Código: TecNM-AC-<br/>PO003-02</span></p></td></tr>
-					<tr style="height:22pt">
-						<td style="width:170pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
-							<p class="s1" style="padding-left: 38pt;text-indent: 0pt;text-align: left;">Revisión: O</p></td></tr>
-					<tr style="height:30pt">
-						<td style="width:333pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
-							<p class="s1" style="padding-left: 38pt;text-indent: 0pt;text-align: left;">Referencia a la Norma ISO 9001:2015: 8.1, 8.2.2, 8.5.1</p></td>
-						<td style="width:170pt;border-top-style:solid;border-top-width:2pt;border-left-style:solid;border-left-width:2pt;border-bottom-style:solid;border-bottom-width:2pt;border-right-style:solid;border-right-width:2pt">
-							<p class="s1" style="padding-left: 45pt;text-indent: 0pt;text-align: left;">Página 1 de 1</p></td></tr>
-				</table>
-			</div>
-		</div>			
-		<div class="indice">
-			<p>Tecnologico Nacional de Mexico</p>
-			<p> Subdirector Academico o su equivalete en los Institutos Tecnologicos Descentralizados</p>
-			<p>Instrumentación didáctica para la formación y desarrollo de competencias Profesionales</p>
-		</div>
-		<div class="indice_2">
-			<?php foreach ($Periodo as $periodo) : ?>
-			<p> Periodo: <?php echo $periodo; ?>.</p><?php endforeach; ?>
-			<?php foreach ($Nommateria as $materia) : ?>
-			<p> Nombre de la asignatura: <?php echo $materia; ?>.</p><?php endforeach; ?>
-			<?php foreach ($Plandeestudio as $planestudio) : ?>
-			<p>Plan de estudio: <?php echo $planestudio; ?></p><?php endforeach; ?>			
-			<p>Clave de asignatura:IINF-2010-220</p> 
-			<p>Horas teoría: – horas prácticas: – créditos:</p>
-		</div>
-	</body>
+    <?php
+    // Mostrar los datos obtenidos en la tabla
+    while ($row = mysqli_fetch_assoc($result)) {
+        echo "<tr>";
+        echo "<td>" . $row["nombremateria"] . "</td>";
+        echo "<td>" . $row["clave_asignatura"] . "</td>";
+        echo '<td><button><a href="/IDAC/login/form_instrumentacion.php?idMateria='.$row["id_de_asignatura"].'" target="_self" >Instrumentación <br> Didáctica</a></button></td>';
+        echo '<td><button><a href="/IDAC/login/form_avance.php?idMateria='.$row["id_de_asignatura"].'" target="_self">Avance programático <br> del curso</a></button></td>';
+        echo "</tr>";
+    } 
+    
+    
+    
+    ?>
+  </tbody> 
+</table>
+<?php if (mysqli_num_rows($result) > 0): ?>
+  <!-- Generar tabla -->
+<?php else: ?>
+  <tr>
+    <td colspan="2">No se encontraron materias asignadas.</td>
+  </tr>
+<?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
 </html>
-
-<?php
-
-$html=ob_get_clean();
-//echo $html;
-
-require_once './libreria/dompdf/autoload.inc.php';
-use Dompdf\Dompdf;
-$dompdf = new Dompdf();
-
-$options = $dompdf->getOptions();
-$options->set(array('isRemoteEnabled' => true));
-$dompdf->setOptions($options);
-
-$dompdf->loadHtml($html);
-
-$dompdf->setPaper('letter','landscape');
-
-$dompdf->render();
-
-$dompdf->stream("instrumentatacion_.pdf", array("Attachment" => false));
-?>
